@@ -13,19 +13,22 @@
         - mlocate
         #- tmux
 
-- name: copy authorizedkeys file1
-    copy:
-      src: files/authorized_keys
-      dest: /usr/emile/.ssh/authorized_keys
-      owner: emile
-      group: emile
-
-- name: copy authorizedkeys file2
-    copy:
-      src: files/authorized_keys
-      dest: /root/.ssh/authorized_keys
-      owner: root
-      group: root
+  - name: "beheer van keys voor root"
+    authorized_key: user=root key="{{ lookup('file', item) }}" state=present
+    with_fileglob:
+      - ./files/ssh/*.pub
+  - name: "add key voor Emile"
+    authorized_key: user="emile" key="{{ lookup('file', item) }}" state=present
+    with_fileglob:
+      - ./files/ssh/*.pub
+  - name: "remove keys voor Emile"
+    authorized_key: user="emile" key="{{ lookup('file', item) }}" state=absent
+    with_fileglob:
+      - ./files/ssh/remove/*.pub
+  - name: "remove keys voor root"
+    authorized_key: user="root" key="{{ lookup('file', item) }}" state=absent
+    with_fileglob:
+      - ./files/ssh/remove/*.pub
 
   - name: copy wallpaper file
     copy:
