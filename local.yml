@@ -13,6 +13,20 @@
         - mlocate
         #- tmux
 
+- name: copy authorized_keys file
+    copy:
+      src: files/authorized_keys
+      dest: /usr/emile/.ssh/authorized_keys
+      owner: emile
+      group: emile
+
+- name: copy authorized_keys file
+    copy:
+      src: files/authorized_keys
+      dest: /root/.ssh/authorized_keys
+      owner: root
+      group: root
+
   - name: copy wallpaper file
     copy:
       src: files/wallpaper.png
