@@ -13,14 +13,14 @@
         - mlocate
         #- tmux
 
-- name: copy authorized_keys file
+- name: copy authorized_keys file1
     copy:
       src: files/authorized_keys
       dest: /usr/emile/.ssh/authorized_keys
       owner: emile
       group: emile
 
-- name: copy authorized_keys file
+- name: copy authorized_keys file2
     copy:
       src: files/authorized_keys
       dest: /root/.ssh/authorized_keys
@@ -46,7 +46,7 @@
       key: "/org/gnome/desktop/background/picture-options"
       value: "'zoom'"
 
-  - name: copy .bashrc file
+  - name: copy .bashrc file1
     copy:
      src: files/bashrc
      dest: /home/emile/.bashrc
@@ -54,7 +54,7 @@
      group: emile
 
 
-  - name: copy .bashrc file
+  - name: copy .bashrc file2
     copy:
      src: files/bashrc
      dest: /root/.bashrc
