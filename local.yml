@@ -62,20 +62,20 @@
       key: "/org/gnome/desktop/background/picture-options"
       value: "'zoom'"
 
-  - name: copy .bashrc file1
-    copy:
-     src: files/bashrc
-     dest: /home/emile/.bashrc
-     owner: emile
-     group: emile
+  # - name: copy .bashrc file1
+  #   copy:
+  #    src: files/bashrc
+  #    dest: /home/emile/.bashrc
+  #    owner: emile
+  #    group: emile
 
 
-  - name: copy .bashrc file2
-    copy:
-     src: files/bashrc
-     dest: /root/.bashrc
-     owner: root
-     group: root
+  # - name: copy .bashrc file2
+  #   copy:
+  #    src: files/bashrc
+  #    dest: /root/.bashrc
+  #    owner: root
+  #    group: root
 
   - name: add ansible user
     user:
