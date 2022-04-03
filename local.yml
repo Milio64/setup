@@ -8,7 +8,7 @@
     package:
       name:
         - htop
-        - vim-nox
+        - vim
         - mc
         - mlocate
         #- tmux
