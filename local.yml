@@ -13,14 +13,14 @@
         - mlocate
         #- tmux
 
-- name: copy authorized_keys file1
+- name: copy authorizedkeys file1
     copy:
       src: files/authorized_keys
       dest: /usr/emile/.ssh/authorized_keys
       owner: emile
       group: emile
 
-- name: copy authorized_keys file2
+- name: copy authorizedkeys file2
     copy:
       src: files/authorized_keys
       dest: /root/.ssh/authorized_keys
