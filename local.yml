@@ -22,7 +22,7 @@
 
    - name: "Clone oh-my-bash for user Emile"
      ansible.builtin.shell:
-       cmd: bash -c git clone --depth=1 https://github.com/ohmybash/oh-my-bash.git && chown -R emile:emile /home/emile/oh-my-bash/
+       cmd: "git clone --depth=1 https://github.com/ohmybash/oh-my-bash.git && chown -R emile:emile /home/emile/oh-my-bash/"
        chdir: /home/emile
        creates: /home/emile/oh-my-bash/tools/install.sh
 
