@@ -1,0 +1,51 @@
+---
+branch: main
+
+ansible_cron_minute: "*/5"
+ssh_port: 22
+ssh_users: "emile root"
+
+# platform-specific
+ansible_python_interpreter: /usr/bin/python3
+microcode_amd_install: false
+microcode_intel_install: false
+
+# app defaults
+gui_editor: gvim
+terminal_emulator: terminator
+web_browser: flatpak run org.mozilla.firefox
+
+
+# application selection
+audacity: false
+authy: false
+autofs: false
+chromium: false
+darktable: false
+firefox: false
+foliate: false
+games: false
+glimpse: false
+keepassxc: false
+libreoffice: true
+lutris: false
+mattermost: false
+minecraft: false
+packer: false
+signal: false
+spotify: false
+steam: false
+syncthing: false
+terraform: false
+thunderbird: false
+todoist: false
+ulauncher: false
+vagrant: false
+virtualbox: false
+vivaldi: false
+vlc: false
+xonotic: false
+
+# desktop environment selection
+gnome: true
+mate: false

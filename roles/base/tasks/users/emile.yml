@@ -1,0 +1,217 @@
+- name: users | emile | create group
+  tags: groups,emile,users
+  group:
+    name: emile
+    state: present
+
+- name: users | emile | create user
+  tags: emile,sudo,users
+  user:
+    name: emile
+    group: emile
+    groups: adm,ansible,{{ sudo_group }}
+    state: present
+    comment: "emile van Zeijl"
+    password: "{{ emile_passwd }}"
+    shell: /bin/bash
+
+- name: users | emile | emile | add sudoers file
+  tags: emile,settings,simone,sudo,system,users
+  copy:
+    src: users/sudoers_emile
+    dest: /etc/sudoers.d/emile
+    owner: root
+    group: root
+    mode: 0440
+
+- name: users | emile | create .ssh directory
+  tags: dotfiles,emile,ssh,users
+  file:
+    path: "{{ item.dir }}"
+    state: directory
+    owner: emile
+    group: emile
+    mode: 0700
+  with_items:
+    - { dir: '/home/emile/.ssh' }
+
+- name: users | emile | add public key
+  tags: dotfiles,emile,ssh,ssh-keys,users
+  authorized_key:
+    user: emile
+    key: "{{ item }}"
+  with_file:
+    - users/emile/ssh/emilelaptop2020.pub
+
+- name: users | emile | create config directories
+  tags: dotfiles,emile,tmux,users,vim,zsh
+  file:
+    path: /home/emile/{{ item.dir }}
+    state: directory
+    owner: emile
+    group: emile
+    mode: 0700
+  with_items:
+    - { dir: '.bash' }
+    - { dir: '.config' }
+    - { dir: '.config/htop' }
+    - { dir: '.config/mc' }
+    - { dir: '.tmux' }
+    - { dir: '.tmux/config' }
+    - { dir: '.tmux/plugins' }
+    - { dir: '.vim' }
+    - { dir: '.vim/autoload' }
+    - { dir: '.vim/bundle' }
+    - { dir: '.vim/colors' }
+    - { dir: '.vim/ftplugin' }
+    - { dir: '.zsh' }
+
+- name: users | emile | copy tmux config (server version)
+  tags: dotfiles,users,emile,tmux,users,vim,zsh
+  copy:
+    src: users/emile/tmux/tmux.conf.server
+    dest: /home/emile/.tmux.conf
+    owner: emile
+    group: emile
+    mode: 0600
+  when: "'server' not in group_names"
+
+- name: users | emile | copy tmux config (workstation version)
+  tags: dotfiles,users,emile,tmux,users,vim,zsh
+  copy:
+    src: users/emile/tmux/tmux.conf.workstation
+    dest: /home/emile/.tmux.conf
+    owner: emile
+    group: emile
+    mode: 0600
+  when: "'server' in group_names"
+
+- name: users | emile | copy dotfiles
+  tags: dotfiles,users,emile,tmux,users,vim,zsh
+  copy:
+    src: users/emile/{{ item.src }}
+    dest: /home/emile/{{ item.dest }}
+    owner: emile
+    group: emile
+    mode: 0600
+  with_items:
+    - { src: 'bash/bash_aliases', dest: '.bash/bash_aliases' }
+    - { src: 'bash/bash_profile', dest: '.bash_profile' }
+    - { src: 'bash/bash_prompt', dest: '.bash/bash_prompt' }
+    - { src: 'bash/bash_functions', dest: '.bash/bash_functions' }
+    - { src: 'bash/bashrc', dest: '.bashrc' }
+    - { src: 'bash/profile', dest: '.profile' }
+    - { src: 'git/gitconfig', dest: '.gitconfig' }
+    - { src: 'htop/htoprc', dest: '.config/htop/htoprc' }
+    - { src: 'inputrc', dest: '.inputrc' }
+    - { src: 'mc/mc.ini', dest: '.config/mc/ini' }
+    - { src: 'vim/vimrc', dest: '.vimrc' }
+    - { src: 'zsh/zshrc', dest: '.zshrc' }
+
+- name: users | emile | clone tmux-completion plugin repository
+  tags: dotfiles,emile,users,tmux
+  git:
+    repo: https://github.com/srsudar/tmux-completion.git
+    dest: /home/emile/.tmux/plugins/completion
+    force: yes
+  notify: update_tmux_plugin_perms
+
+- name: users | emile | clone tmux-continuum plugin repository
+  tags: dotfiles,emile,users,tmux
+  git:
+    repo: https://github.com/tmux-plugins/tmux-continuum
+    dest: /home/emile/.tmux/plugins/continuum
+    force: yes
+  notify: update_tmux_plugin_perms
+
+- name: users | emile | clone tmux-resurrect plugin repository
+  tags: dotfiles,emile,users,tmux
+  git:
+    repo: https://github.com/tmux-plugins/tmux-resurrect
+    dest: /home/emile/.tmux/plugins/resurrect
+    force: yes
+  notify: update_tmux_plugin_perms
+
+- name: users | emile | copy individual zsh config files
+  tags: dotfiles,emile,users,zsh
+  copy:
+    src: users/emile/zsh/{{ item.src }}
+    dest: /home/emile/.zsh/{{ item.src }}
+    owner: emile
+    group: emile
+    mode: 0600
+  with_items:
+    - { src: 'aliases.zsh' }
+    - { src: 'bindkey.zsh' }
+    - { src: 'completion.zsh' }
+    - { src: 'exports.zsh' }
+    - { src: 'functions.zsh' }
+    - { src: 'history.zsh' }
+    - { src: 'path.zsh' }
+    - { src: 'plugins.zsh' }
+    - { src: 'prompt.zsh' }
+    - { src: 'setopt.zsh' }
+    - { src: 'theming.zsh' }
+
+- name: users | emile | copy vim ftype files
+  tags: dotfiles,emile,users,vim
+  copy:
+    src: users/emile/vim/{{ item.src }}
+    dest: /home/emile/.vim/ftplugin/{{ item.src }}
+    owner: emile
+    group: emile
+    mode: 0600
+  with_items:
+    - { src: 'cmake.vim' }
+    - { src: 'cpp.vim' }
+    - { src: 'html.vim' }
+    - { src: 'perl.vim' }
+    - { src: 'python.vim' }
+    - { src: 'ruby.vim' }
+    - { src: 'sql.vim' }
+    - { src: 'xml.vim' }
+
+- name: users | emile | copy vim color files
+  tags: dotfiles,emile,users,vim
+  copy:
+    src: users/emile/vim/{{ item.src }}
+    dest: /home/emile/.vim/colors/{{ item.src }}
+    owner: emile
+    group: emile
+    mode: 0600
+  with_items:
+    - { src: 'bubblegum-256-dark.vim' }
+    - { src: 'darktango.vim' }
+    - { src: 'jellybeans.vim' }
+    - { src: 'xoria256.vim' }
+    - { src: 'zenburn.vim' }
+
+- name: users | emile | install pathogen
+  tags: dotfiles,emile,users,vim
+  copy:
+    src: users/emile/vim/{{ item.src }}
+    dest: "{{ item.dest }}"
+    owner: emile
+    group: emile
+    mode: 0700
+  with_items:
+    - { src: 'pathogen.vim', dest: '/home/emile/.vim/autoload/pathogen.vim' }
+
+- name: users | emile | checkout git repositories
+  tags: git,users,emile
+  become: yes
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ item.dest }}"
+    force: yes
+  with_items:
+     - { repo: 'https://github.com/ohmybash/ohmybash.github.io.git', dest: '/home/emile/oh-my-bash' } 
+     - { repo: 'https://github.com/ctrlpvim/ctrlp.vim.git', dest: '/home/emile/.vim/bundle/ctrlp.vim' }
+     - { repo: 'https://github.com/davidhalter/jedi-vim.git', dest: '/home/emile/.vim/bundle/jedi-vim' }
+     - { repo: 'https://github.com/pearofducks/ansible-vim', dest: '/home/emile/.vim/bundle/ansible-vim' }
+     - { repo: 'https://github.com/rhysd/vim-grammarous.git', dest: '/home/emile/.vim/bundle/vim-grammarous' }
+     - { repo: 'https://github.com/ron89/thesaurus_query.vim', dest: '/home/emile/.vim/bundle/thesaurus_query' }
+     - { repo: 'https://github.com/scrooloose/nerdtree.git', dest: '/home/emile/.vim/bundle/nerdtree' }
+     - { repo: 'https://github.com/tpope/vim-obsession.git', dest: '/home/emile/.vim/bundle/vim-obsession' }
+     - { repo: 'https://github.com/vim-syntastic/syntastic.git', dest: '/home/emile/.vim/bundle/syntastic' }
+  notify: update_vim_bundle_perms
