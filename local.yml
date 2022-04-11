@@ -13,12 +13,12 @@
 
   - name: copy logrotate ansible
     copy:
-      become: yes
-      become_user: root
       src: files/logrotate/ansible
       dest: /etc/logrotate.d/ansible
       owner: root
       group: root
+    become: yes
+    become_user: root
 
   - name: install packages
     package:
