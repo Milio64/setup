@@ -34,25 +34,25 @@
 
   - name: ensure file exists voor mailen root
     copy:
-      become: yes
-      become_user: root
       content: ""
       dest: /var/spool/mail/root
       force: no
       group: sys
       owner: root
       mode: 0600
+    become: yes
+    become_user: root
 
   - name: ensure file exists voor mailen emile
     copy:
-      become: yes
-      become_user: root
       content: ""
       dest: /var/spool/mail/emile
       force: no
       group: sys
       owner: emile
       mode: 0600
+    become: yes
+    become_user: root
 
   - name: "install oh-my-bash1"
     ansible.builtin.shell:
@@ -115,6 +115,8 @@
   #    dest: /home/emile/.bashrc
   #    owner: emile
   #    group: emile
+  #  become: yes
+  #  become_user: root
 
 
   # - name: copy .bashrc file2
@@ -123,6 +125,9 @@
   #    dest: /root/.bashrc
   #    owner: root
   #    group: root
+  #  become: yes
+  #  become_user: root
+
 
   - name: add ansible user
     user:
