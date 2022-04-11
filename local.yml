@@ -11,9 +11,28 @@
         - vim
         - mc
         - mlocate
+        - mutt
         - mailx
+        #https://www.cyberithub.com/how-to-install-mail-command-in-rhel-centos/  configuratie van mailx moet nog afgemaakt worden.
         #- tmux
 
+  - name: ensure file exists voor mailen root
+    copy:
+      content: ""
+      dest: /var/spool/mail/root
+      force: no
+      group: sys
+      owner: root
+      mode: 0600
+
+  - name: ensure file exists voor mailen emile
+    copy:
+      content: ""
+      dest: /var/spool/mail/emile
+      force: no
+      group: sys
+      owner: emile
+      mode: 0600
 
   - name: "install oh-my-bash1"
     ansible.builtin.shell:
