@@ -1,0 +1,39 @@
+puppet-pull config afmaken met webserver curl command en...
+
+ansible-pull logfile waar? 
+    in /etc/ansible/ansible.cfg
+    # logging is off by default unless this path is defined
+    # if so defined, consider logrotate
+    log_path = /var/log/ansible.log
+    op Rocky-mood aangezet!
+
+repositorys wijzigen, behalve op Rocky-Mood
+
+zerotier in ansible of puppet
+
+puppet installatie in ansible
+
+
+mail vanaf script sturen https://linuxhint.com/bash_script_send_email/ met mutt
+
+verschil alleen shell/grafisch
+
+syslog server... 
+
+logrotate
+
+ssh config file distirbutie
+
+ansible roles gaan gebruiken
+
+Backup van.... plan maken en implementeren
+
+MATE als desktop https://www.linuxcapable.com/install-mate-desktop-environment-on-rocky-linux-8/
+Cinnamon als desktop https://www.linuxcapable.com/install-cinnamon-desktop-environment-on-rocky-linux-8/
+    https://github.com/linuxmint/cinnamon
+
+ssh keys genereren en ...
+
+iredmail config https://computingforgeeks.com/install-and-configure-iredmail-on-rocky-linux/
+
+Vooor meer ideeen en info https://www.linuxcapable.com/rocky-linux/
