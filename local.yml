@@ -38,9 +38,9 @@
       content: ""
       dest: /var/spool/mail/root
       force: no
-      group: sys
+      group: mail
       owner: root
-      mode: 0600
+      mode: 0660
     become: yes
     become_user: root
 
@@ -49,9 +49,9 @@
       content: ""
       dest: /var/spool/mail/emile
       force: no
-      group: sys
+      group: mail
       owner: emile
-      mode: 0600
+      mode: 0660
     become: yes
     become_user: root
 
