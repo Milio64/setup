@@ -7,11 +7,13 @@ ansible-pull logfile waar?
     log_path = /var/log/ansible.log
     op Rocky-mood aangezet!
 
-repositorys wijzigen, behalve op Rocky-Mood
+repositorys wijzigen, behalve op Rocky-Mood 
+    GEBRUIK when: ansible_default_ipv4.macaddress == "00:50:08:08:35:b8" and ansible_env.HOSTNAME == "rocky-mood.vanzeijl.net" 
 
 zerotier in ansible of puppet
 
-puppet installatie in ansible
+puppet installatie in ansible alleen voor rocky-mood
+
 
 
 mail vanaf script sturen https://linuxhint.com/bash_script_send_email/ met mutt
