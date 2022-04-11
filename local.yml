@@ -123,3 +123,4 @@
       user: velociraptor
       minute: "*/10"
       job: ansible-pull -o -U https://github.com/Milio64/setup.git
+
