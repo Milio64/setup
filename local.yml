@@ -13,6 +13,8 @@
 
   - name: copy logrotate ansible
     copy:
+      become: yes
+      become_user: root
       src: files/logrotate/ansible
       dest: /etc/logrotate.d/ansible
       owner: root
@@ -32,6 +34,8 @@
 
   - name: ensure file exists voor mailen root
     copy:
+      become: yes
+      become_user: root
       content: ""
       dest: /var/spool/mail/root
       force: no
@@ -41,6 +45,8 @@
 
   - name: ensure file exists voor mailen emile
     copy:
+      become: yes
+      become_user: root
       content: ""
       dest: /var/spool/mail/emile
       force: no
