@@ -149,3 +149,5 @@
       user: velociraptor
       minute: "*/10"
       job: ansible-pull -o -U https://github.com/Milio64/setup.git
+
+ # - name: Mac van Rocky-new zet naam 00:50:08:09:0c:f2
