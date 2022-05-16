@@ -32,6 +32,11 @@
         - mailx
         #https://www.cyberithub.com/how-to-install-mail-command-in-rhel-centos/  configuratie van mailx moet nog afgemaakt worden.
         #- tmux
+  - name: add user emile
+    user:
+      name: emile
+      create_home: yes
+      system: no
 
   - name: ensure file exists voor mailen root
     copy:
