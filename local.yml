@@ -61,11 +61,11 @@
       chdir: /root
       creates: .osh-update
 
-  - name: "Clone oh-my-bash for user Emile"
-    ansible.builtin.shell:
-      cmd: "git clone --depth=1 https://github.com/ohmybash/oh-my-bash.git && chown -R emile:emile /home/emile/oh-my-bash/"
-      chdir: /home/emile
-      creates: /home/emile/oh-my-bash/tools/install.sh
+#  - name: "Clone oh-my-bash for user Emile"
+#    ansible.builtin.shell:
+#      cmd: "git clone --depth=1 https://github.com/ohmybash/oh-my-bash.git && chown -R emile:emile /home/emile/oh-my-bash/"
+#      chdir: /home/emile
+#      creates: /home/emile/oh-my-bash/tools/install.sh
 
   - name: "beheer van keys voor root"
     ansible.posix.authorized_key: user=root key="{{ lookup('file', item) }}" state=present
