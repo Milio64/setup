@@ -40,12 +40,17 @@
       regexp: "#log_path = /var/log/ansible.log"
       replace: "log_path = /var/log/ansible.log"
 
-  - name: Copy System files
-    copy: src={{ item.src }} dest={{ item.dest }}
-    with_items:
-      - { src: 'files/logrotate/ansible', dest: ' /etc/logrotate.d/ansible' }
-      - { src: 'files/sudoers.d/emile', dest: '/etc/sudoers.d/emile' }
-      - { src: 'files/sudoers.d/velociraptor', dest: '/etc/sudoers.d/velociraptor' }
+  #- name: Copy System files logrotage
+  #  copy: src={{ item.src }} dest={{ item.dest }}
+  #  with_items:
+  #    - { src: 'files/logrotate/ansible', dest: ' /etc/logrotate.d/ansible' }
+
+  - name: sudoers files
+    copy: src="{{ lookup('file', item) }} dest="{{ lookup('file', item) }}
+    with_fileglob:
+      - 'files/sudoers.d/*
+    #  - { src: 'files/sudoers.d/emile', dest: '/etc/sudoers.d/emile' }
+    #  - { src: 'files/sudoers.d/velociraptor', dest: '/etc/sudoers.d/velociraptor' }
 
 
   - name: ensure file exists voor mailen root
