@@ -79,7 +79,7 @@
     become_user: root
 
   - name: "beheer van keys voor root"
-    ansible.posix.authorized_key: user=root key="{{ lookup('file', item) }}" state=present
+    authorized_key: user=root key="{{ lookup('file', item) }}" state=present
     with_fileglob:
       - files/ssh/add/*.pub
    - name: "add key voor Emile"
