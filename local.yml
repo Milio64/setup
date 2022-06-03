@@ -5,6 +5,30 @@
 
   tasks:
   #############################################################
+  - name: add user emile
+    user:
+      name: emile
+      create_home: yes
+      system: no
+
+  - name: install packages
+    package:
+      name:
+        - htop
+        - vim
+        - mc
+        - mlocate
+        - mutt
+        - mailx
+        #https://www.cyberithub.com/how-to-install-mail-command-in-rhel-centos/  configuratie van mailx moet nog afgemaakt worden.
+        #- tmux
+
+  - name: "install oh-my-bash1 voor root"
+    ansible.builtin.shell:
+      cmd: bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" && sed -i 's/"font"/"agnoster"/' .bashrc
+      chdir: /root
+      creates: .osh-update
+
   - name: Ansible logging AAN
     replace:
       path: "/etc/ansible/ansible.cfg"
@@ -20,23 +44,6 @@
       group: root
     become: yes
     become_user: root
-  #############################################################
-  - name: install packages
-    package:
-      name:
-        - htop
-        - vim
-        - mc
-        - mlocate
-        - mutt
-        - mailx
-        #https://www.cyberithub.com/how-to-install-mail-command-in-rhel-centos/  configuratie van mailx moet nog afgemaakt worden.
-        #- tmux
-  - name: add user emile
-    user:
-      name: emile
-      create_home: yes
-      system: no
 
   - name: ensure file exists voor mailen root
     copy:
@@ -60,34 +67,22 @@
     become: yes
     become_user: root
 
-  - name: "install oh-my-bash1"
-    ansible.builtin.shell:
-      cmd: bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" && sed -i 's/"font"/"agnoster"/' .bashrc
-      chdir: /root
-      creates: .osh-update
-
-#  - name: "Clone oh-my-bash for user Emile"
-#    ansible.builtin.shell:
-#      cmd: "git clone --depth=1 https://github.com/ohmybash/oh-my-bash.git && chown -R emile:emile /home/emile/oh-my-bash/"
-#      chdir: /home/emile
-#      creates: /home/emile/oh-my-bash/tools/install.sh
-
-  - name: "beheer van keys voor root"
-    ansible.posix.authorized_key: user=root key="{{ lookup('file', item) }}" state=present
-    with_fileglob:
-      - ./files/ssh/*.pub
-  - name: "add key voor Emile"
-    aansible.posix.authorized_key: user="emile" key="{{ lookup('file', item) }}" state=present
-    with_fileglob:
-      - ./files/ssh/*.pub
-  - name: "remove keys voor Emile"
-    ansible.posix.authorized_key: user="emile" key="{{ lookup('file', item) }}" state=absent
-    with_fileglob:
-      - ./files/ssh/remove/*.pub
-  - name: "remove keys voor root"
-    aansible.posix.authorized_key: user="root" key="{{ lookup('file', item) }}" state=absent
-    with_fileglob:
-      - ./files/ssh/remove/*.pub
+# - name: "beheer van keys voor root"
+#   ansible.posix.authorized_key: user=root key="{{ lookup('file', item) }}" state=present
+#   with_fileglob:
+#     - ./files/ssh/*.pub
+# - name: "add key voor Emile"
+#   aansible.posix.authorized_key: user="emile" key="{{ lookup('file', item) }}" state=present
+#   with_fileglob:
+#     - ./files/ssh/*.pub
+# - name: "remove keys voor Emile"
+#   ansible.posix.authorized_key: user="emile" key="{{ lookup('file', item) }}" state=absent
+#   with_fileglob:
+#     - ./files/ssh/remove/*.pub
+# - name: "remove keys voor root"
+#   aansible.posix.authorized_key: user="root" key="{{ lookup('file', item) }}" state=absent
+#   with_fileglob:
+#     - ./files/ssh/remove/*.pub
 
   - name: Check grafisch omgeving ja/nee
     shell: readlink -f /etc/systemd/system/default.target
