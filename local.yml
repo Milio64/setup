@@ -92,17 +92,17 @@
 
 
 
-  ########### home directory's gelijk houden
+  ########### home directory's vullen
   - name: "install oh-my-bash1 voor root"
     ansible.builtin.shell:
       cmd: bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" && sed -i 's/"font"/"agnoster"/' .bashrc
       chdir: /root
       creates: /root/.oh-my-bash
 
-
+  ########## home directotry vullen met config files
   - name: Copy files voor root
     copy:
-      src: "files/home/{{ item }}"
+      src: "{{ item }}"
       dest: "/root/"
       owner: root
       group: root
@@ -113,8 +113,8 @@
 
   - name: Copy files voor emile
     copy:
-      src: "files/home/{{ item }}"
-      dest: '/home/emile/'
+      src: "{{ item }}"
+      dest: "/home/emile/"
       owner: emile
       group: emile
     become: yes
