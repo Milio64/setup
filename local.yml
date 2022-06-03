@@ -102,30 +102,25 @@
 
   - name: Copy files voor root
     copy:
-      src: "{{ item }}"
+      src: "files/home/{{ item }}"
       dest: "/root/"
       owner: root
       group: root
     become: yes
     become_user: root
-    loop:
-      - files/.bashrc
-      - files/.bash_profile
-      - files/.viminfo
+    with_fileglob:
+      - files/home/*
 
   - name: Copy files voor emile
-    #LETOP file opgeslagen in git zonder punt!
     copy:
-      src: "{{ item }}"
+      src: "files/home/{{ item }}"
       dest: '/home/emile/'
       owner: emile
       group: emile
     become: yes
     become_user: root
-    loop:
-      - files/.bashrc
-      - files/.bash_profile
-      - files/.viminfo
+    with_fileglob:
+      - files/home/*
 
   - name: add ansible-pull cron job
     cron:
