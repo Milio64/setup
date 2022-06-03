@@ -77,7 +77,7 @@
 
 
   - name: ensure file exists voor mailen root
-    copy:rm 
+    copy: 
       content: ""
       dest: /var/spool/mail/{{item}}
       force: no
