@@ -42,10 +42,9 @@
 
   ############# sudoers files
   - name: sudoers files
-    copy: src="{{ lookup('file', item) }}" dest="/etc/sudoers.d/"
+    copy: src="{{ item }}" dest="/etc/sudoers.d/"
     with_fileglob:
-      - files/sudoers.d/.
-
+      - files/sudoers.d/*
 
 
 
