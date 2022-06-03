@@ -20,55 +20,13 @@
       name: velociraptor
       system: yes
 
-  - name: install packages
-    package:
-      name:
-        - htop
-        - vim
-        - mc
-        - mlocate
-        - mutt
-        - mailx
-        #https://www.cyberithub.com/how-to-install-mail-command-in-rhel-centos/  configuratie van mailx moet nog afgemaakt worden.
-        #- tmux
-
-  - name: "install oh-my-bash1 voor root"
-    ansible.builtin.shell:
-      cmd: bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" && sed -i 's/"font"/"agnoster"/' .bashrc
-      chdir: /root
-      creates: /root/.oh-my-bash
-
-  - name: Ansible logging AAN
-    replace:
-      path: "/etc/ansible/ansible.cfg"
-      after: "# if so defined, consider logrotate"
-      regexp: "#log_path = /var/log/ansible.log"
-      replace: "log_path = /var/log/ansible.log"
-
-  #- name: Copy System files logrotage
-  #  copy: src={{ item.src }} dest={{ item.dest }}
-  #  with_items:
-  #    - { src: 'files/logrotate/ansible', dest: ' /etc/logrotate.d/ansible' }
-
+  ############# sudoers files
   - name: sudoers files
     copy: src="{{ lookup('file', item) }} dest="{{ lookup('file', item) }}
     with_fileglob:
       - 'files/sudoers.d/.
 
-  - name: ensure file exists voor mailen root
-    copy:
-      content: ""
-      dest: /var/spool/mail/{{item}}
-      force: no
-      group: mail
-      owner: {{item}}
-      mode: 0660
-    become: yes
-    become_user: root
-    loop:
-      - root
-      - emile
-  
+  ############# ssh keys
   - name: "add ssh keys voor root"
     authorized_key: user=root key="{{ lookup('file', item) }}" state=present
     with_fileglob:
@@ -86,6 +44,58 @@
     authorized_key: user=emile key="{{ lookup('file', item) }}" state=absent
     with_fileglob:
       - files/ssh/remove/*.pub
+
+  ########### software  
+  - name: install packages
+    package:
+      name:
+        - htop
+        - vim
+        - mc
+        - mlocate
+        - mutt
+        - mailx
+        #https://www.cyberithub.com/how-to-install-mail-command-in-rhel-centos/  configuratie van mailx moet nog afgemaakt worden.
+        #- tmux
+
+
+  - name: Ansible logging AAN
+    replace:
+      path: "/etc/ansible/ansible.cfg"
+      after: "# if so defined, consider logrotate"
+      regexp: "#log_path = /var/log/ansible.log"
+      replace: "log_path = /var/log/ansible.log"
+
+  #- name: Copy System files logrotage
+  #  copy: src={{ item.src }} dest={{ item.dest }}
+  #  with_items:
+  #    - { src: 'files/logrotate/ansible', dest: ' /etc/logrotate.d/ansible' }
+
+
+  - name: ensure file exists voor mailen root
+    copy:
+      content: ""
+      dest: /var/spool/mail/{{item}}
+      force: no
+      group: mail
+      owner: {{item}}
+      mode: 0660
+    become: yes
+    become_user: root
+    loop:
+      - root
+      - emile
+
+
+
+
+  ########### home directory's gelijk houden
+  - name: "install oh-my-bash1 voor root"
+    ansible.builtin.shell:
+      cmd: bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" && sed -i 's/"font"/"agnoster"/' .bashrc
+      chdir: /root
+      creates: /root/.oh-my-bash
+
 
   - name: Copy files voor root
     copy:
