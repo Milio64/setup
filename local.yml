@@ -68,12 +68,12 @@
       after: "# if so defined, consider logrotate"
       regexp: "#log_path = /var/log/ansible.log"
       replace: "log_path = /var/log/ansible.log"
+    #nog iets verzinnen als regel niet bestaat in config file dan toevoegen
 
-  #- name: Copy System files logrotage
-  #  copy: src={{ item.src }} dest={{ item.dest }}
-  #  with_items:
-  #    - { src: 'files/logrotate/ansible', dest: '/etc/logrotate.d/ansible' }
-
+  - name: Copy System files logrotage
+    copy: src={{ item.src }} dest={{ item.dest }}
+    with_items:
+      - { src: 'files/logrotate/ansible', dest: '/etc/logrotate.d/ansible' }
 
   - name: ensure file exists voor mailen root
     copy: 
