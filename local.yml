@@ -5,6 +5,11 @@
 
   tasks:
   #############################################################
+  
+  #- name: Set a hostname
+  #  ansible.builtin.hostname:
+  #    name: web01
+
   - name: add user emile
     user:
       name: emile
@@ -53,7 +58,7 @@
   - name: ensure file exists voor mailen root
     copy:
       content: ""
-      dest: '/var/spool/mail/{{item}}'
+      dest: /var/spool/mail/{{item}}
       force: no
       group: mail
       owner: '{{item}}'
@@ -63,18 +68,7 @@
     loop:
       - root
       - emile
-      
-  #- name: ensure file exists voor mailen emile
-  #  copy:
-  #    content: ""
-  #    dest: /var/spool/mail/emile
-  #    force: no
-  #    group: mail
-  #    owner: emile
-  #    mode: 0660
-  #  become: yes
-  #  become_user: root
-
+  
   - name: "add key voor root"
     authorized_key: user=root key="{{ lookup('file', item) }}" state=present
     with_fileglob:
