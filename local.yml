@@ -110,9 +110,8 @@
     become_user: root
     loop:
       - files/bashrc
-      - files/bashprofile
+      - files/bash_profile
       - files/viminfo
-
 
   - name: Copy files voor emile
     #LETOP file opgeslagen in git zonder punt!
@@ -125,7 +124,7 @@
     become_user: root
     loop:
       - files/bashrc
-      - files/bashprofile
+      - files/bash_profile
       - files/viminfo
 
   - name: add ansible-pull cron job
