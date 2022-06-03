@@ -32,16 +32,16 @@
     with_fileglob:
       - files/ssh/add/*.pub
   - name: "remove ssh keys voor root"
-    authorized_key: user=root key="{{ lookup('file', item) }}" state=absent
+    authorized_key: user=root key="{{ lookup(file, item) }}" state=absent
     with_fileglob:
       - files/ssh/remove/*.pub
   
   - name: "add ssh keys voor emile"
-    authorized_key: user=emile key="{{ lookup('file', item) }}" state=present
+    authorized_key: user=emile key="{{ lookup(file, item) }}" state=present
     with_fileglob:
       - files/ssh/add/*.pub
   - name: "remove ssh keys voor emile"
-    authorized_key: user=emile key="{{ lookup('file', item) }}" state=absent
+    authorized_key: user=emile key="{{ lookup(file, item) }}" state=absent
     with_fileglob:
       - files/ssh/remove/*.pub
 
