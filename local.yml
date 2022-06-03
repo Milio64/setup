@@ -84,31 +84,31 @@
 #   with_fileglob:
 #     - ./files/ssh/remove/*.pub
 
-  - name: Check grafisch omgeving ja/nee
-    shell: readlink -f /etc/systemd/system/default.target
-    register: shell_output
-
-  - name: copy wallpaper file
-    copy:
-      src: files/wallpaper.png
-      dest: /usr/share/backgrounds/ansible-wallpaper.png
-      owner: root
-      group: root
-    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
-
-  - name: set wallpaper
-    become_user: emile
-    dconf:
-      key: "/org/gnome/desktop/background/picture-uri"
-      value: "'file:///usr/share/backgrounds/ansible-wallpaper.png'"
-    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
-
-  - name: set wallpaper position
-    become_user: emile
-    dconf:
-      key: "/org/gnome/desktop/background/picture-options"
-      value: "'zoom'"
-    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
+#  - name: Check grafisch omgeving ja/nee
+#    shell: readlink -f /etc/systemd/system/default.target
+#    register: shell_output
+#
+#  - name: copy wallpaper file
+#    copy:
+#      src: files/wallpaper.png
+#      dest: /usr/share/backgrounds/ansible-wallpaper.png
+#      owner: root
+#      group: root
+#    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
+#
+#  - name: set wallpaper
+#    become_user: emile
+#    dconf:
+#      key: "/org/gnome/desktop/background/picture-uri"
+#      value: "'file:///usr/share/backgrounds/ansible-wallpaper.png'"
+#    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
+#
+#  - name: set wallpaper position
+#    become_user: emile
+#    dconf:
+#      key: "/org/gnome/desktop/background/picture-options"
+#      value: "'zoom'"
+#    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
 
   # - name: copy .bashrc file1
   #   copy:
