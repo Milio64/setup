@@ -28,7 +28,7 @@
 
   ############# ssh keys
   - name: "add ssh keys voor root"
-    authorized_key: user=root key="{{ lookup('file', item) }}" state=present
+    authorized_key: user=root key="{{ lookup(file, item) }}" state=present
     with_fileglob:
       - files/ssh/add/*.pub
   - name: "remove ssh keys voor root"
@@ -73,7 +73,7 @@
 
 
   - name: ensure file exists voor mailen root
-    copy:
+    copy:rm 
       content: ""
       dest: /var/spool/mail/{{item}}
       force: no
