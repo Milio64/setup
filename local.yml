@@ -53,7 +53,7 @@
   - name: ensure file exists voor mailen root
     copy:
       content: ""
-      dest: /var/spool/mail/'{{item}}'
+      dest: '/var/spool/mail/{{item}}'
       force: no
       group: mail
       owner: '{{item}}'
