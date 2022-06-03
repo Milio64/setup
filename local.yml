@@ -69,20 +69,21 @@
       - root
       - emile
   
-  - name: "add key voor root"
+  - name: "add ssh keys voor root"
     authorized_key: user=root key="{{ lookup('file', item) }}" state=present
     with_fileglob:
       - files/ssh/add/*.pub
-  - name: "add key voor emile"
+  - name: "remove ssh keys voor root"
+    authorized_key: user=root key="{{ lookup('file', item) }}" state=absent
+    with_fileglob:
+      - files/ssh/remove/*.pub
+  
+  - name: "add ssh keys voor emile"
     authorized_key: user=emile key="{{ lookup('file', item) }}" state=present
     with_fileglob:
       - files/ssh/add/*.pub
-  - name: "remove keys voor emile"
+  - name: "remove ssh keys voor emile"
     authorized_key: user=emile key="{{ lookup('file', item) }}" state=absent
-    with_fileglob:
-      - files/ssh/remove/*.pub
-  - name: "remove keys voor root"
-    authorized_key: user=root key="{{ lookup('file', item) }}" state=absent
     with_fileglob:
       - files/ssh/remove/*.pub
 
