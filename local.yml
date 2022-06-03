@@ -81,11 +81,11 @@
   - name: "beheer van keys voor root"
     ansible.posix.authorized_key: user=root key="{{ lookup('file', item) }}" state=present
     with_fileglob:
-      - files/ssh/*.pub
-  - name: "add key voor Emile"
+      - files/ssh/add/*.pub
+   - name: "add key voor Emile"
     aansible.posix.authorized_key: user=emile key="{{ lookup('file', item) }}" state=present
     with_fileglob:
-      - files/ssh/*.pub
+      - files/ssh/add/*.pub
   - name: "remove keys voor Emile"
     ansible.posix.authorized_key: user=emile key="{{ lookup('file', item) }}" state=absent
     with_fileglob:
