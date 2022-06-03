@@ -78,10 +78,10 @@
   - name: ensure file exists voor mailen root
     copy: 
       content: ""
-      dest: '/var/spool/mail/{{item}}'
+      dest: "/var/spool/mail/{{ item }}"
       force: no
       group: mail
-      owner: '{{item}}'
+      owner: "{{ item }}"
       mode: 0660
     become: yes
     become_user: root
@@ -102,8 +102,8 @@
 
   - name: Copy files voor root
     copy:
-      src: '{{item}}'
-      dest: '/root'
+      src: "{{ item }}"
+      dest: "/root/.{{ item }}"
       owner: root
       group: root
     become: yes
@@ -117,8 +117,8 @@
   - name: Copy files voor emile
     #LETOP file opgeslagen in git zonder punt!
     copy:
-      src: '{{item}}'
-      dest: '/home/emile/.{{item}}}'
+      src: "{{ item }}"
+      dest: '/home/emile/.{{ item }}}'
       owner: emile
       group: emile
     become: yes
