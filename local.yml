@@ -149,5 +149,31 @@
       user: velociraptor
       minute: "*/10"
       job: ansible-pull -o -U https://github.com/Milio64/setup.git
-
- # - name: Mac van Rocky-new zet naam 00:50:08:09:0c:f2
+  
+  #####################################################################################
+  #####################################################################################
+  # DNF updates 
+  - name: update
+    dnf:
+      update_cache: yes
+  
+  - name: upgrade
+    dnf:
+      name: "*"
+      state: latest
+  
+  - name: Check if reboot is needed
+    shell: dnf needs-restarting -r ; echo $?
+    args:
+      warn: false
+    register: reboot_required_command
+  
+  - name: Extract return code from output
+    set_fact:
+      reboot_required: "{{ reboot_required_command.stdout_lines | last }}"
+  
+  - name: Reboot
+    reboot:
+    when: reboot_required == "1"
+   
+   # - name: Mac van Rocky-new zet naam 00:50:08:09:0c:f2
