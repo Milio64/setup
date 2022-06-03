@@ -10,6 +10,10 @@
       name: emile
       create_home: yes
       system: no
+  - name: add ansible user
+    user:
+      name: velociraptor
+      system: yes
 
   - name: install packages
     package:
@@ -36,14 +40,21 @@
       regexp: "#log_path = /var/log/ansible.log"
       replace: "log_path = /var/log/ansible.log"
 
-  - name: copy logrotate ansible
-    copy:
-      src: files/logrotate/ansible
-      dest: /etc/logrotate.d/ansible
-      owner: root
-      group: root
-    become: yes
-    become_user: root
+
+  - name: Copy System files
+    copy: src={{ item.src }} dest={{ item.dest }}
+    with_items:
+      - { src: 'files/logrotate/ansible', dest: ' /etc/logrotate.d/ansible' }
+      - { src: 'files/sudoers.d/emile', dest: '/etc/sudoers.d/emile' }
+
+  #- name: copy logrotate ansible
+  #  copy:
+  #    src: files/logrotate/ansible
+  #    dest: /etc/logrotate.d/ansible
+  #    owner: root
+  #    group: root
+  #  become: yes
+  #  become_user: root
 
   - name: ensure file exists voor mailen root
     copy:
@@ -67,22 +78,22 @@
     become: yes
     become_user: root
 
-# - name: "beheer van keys voor root"
-#   ansible.posix.authorized_key: user=root key="{{ lookup('file', item) }}" state=present
-#   with_fileglob:
-#     - ./files/ssh/*.pub
-# - name: "add key voor Emile"
-#   aansible.posix.authorized_key: user="emile" key="{{ lookup('file', item) }}" state=present
-#   with_fileglob:
-#     - ./files/ssh/*.pub
-# - name: "remove keys voor Emile"
-#   ansible.posix.authorized_key: user="emile" key="{{ lookup('file', item) }}" state=absent
-#   with_fileglob:
-#     - ./files/ssh/remove/*.pub
-# - name: "remove keys voor root"
-#   aansible.posix.authorized_key: user="root" key="{{ lookup('file', item) }}" state=absent
-#   with_fileglob:
-#     - ./files/ssh/remove/*.pub
+  - name: "beheer van keys voor root"
+    ansible.posix.authorized_key: user=root key="{{ lookup('file', item) }}" state=present
+    with_fileglob:
+      - files/ssh/*.pub
+  - name: "add key voor Emile"
+    aansible.posix.authorized_key: user="emile" key="{{ lookup('file', item) }}" state=present
+    with_fileglob:
+      - files/ssh/*.pub
+  - name: "remove keys voor Emile"
+    ansible.posix.authorized_key: user="emile" key="{{ lookup('file', item) }}" state=absent
+    with_fileglob:
+      - files/ssh/remove/*.pub
+  - name: "remove keys voor root"
+    aansible.posix.authorized_key: user="root" key="{{ lookup('file', item) }}" state=absent
+    with_fileglob:
+      - files/ssh/remove/*.pub
 
 #  - name: Check grafisch omgeving ja/nee
 #    shell: readlink -f /etc/systemd/system/default.target
@@ -110,30 +121,33 @@
 #      value: "'zoom'"
 #    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
 
-  - name: copy .bashrc file1
-    copy:
-      src: files/bashrc
-      dest: /home/emile/.bashrc
-      owner: emile
-      group: emile
-    become: yes
-    become_user: root
 
-
-  - name: copy .bashrc file2
+  - name: Copy files voor root
     copy:
-      src: files/bashrc
-      dest: /root/.bashrc
+      src: '{{item}}'
+      dest: '/root'
       owner: root
       group: root
     become: yes
     become_user: root
+    loop:
+      - files/.bashrc
+      - files/.bashprofile
+      - files/.viminfo
 
+  - name: Copy files voor emile
+    copy:
+      src: '{{item}}'
+      dest: '/home/emile'
+      owner: emile
+      group: emile
+    become: yes
+    become_user: root
+    loop:
+      - files/.bashrc
+      - files/.bashprofile
+      - files/.viminfo
 
-  - name: add ansible user
-    user:
-      name: velociraptor
-      system: yes
 
   - name: set up sudo for ansible user
     copy:
