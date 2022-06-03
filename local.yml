@@ -27,7 +27,7 @@
     ansible.builtin.shell:
       cmd: bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" && sed -i 's/"font"/"agnoster"/' .bashrc
       chdir: /root
-      creates: .osh-update
+      creates: /root/.oh-my-bash
 
   - name: Ansible logging AAN
     replace:
@@ -110,24 +110,24 @@
 #      value: "'zoom'"
 #    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
 
-  # - name: copy .bashrc file1
-  #   copy:
-  #    src: files/bashrc
-  #    dest: /home/emile/.bashrc
-  #    owner: emile
-  #    group: emile
-  #  become: yes
-  #  become_user: root
+   - name: copy .bashrc file1
+     copy:
+      src: files/bashrc
+      dest: /home/emile/.bashrc
+      owner: emile
+      group: emile
+     become: yes
+     become_user: root
 
 
-  # - name: copy .bashrc file2
-  #   copy:
-  #    src: files/bashrc
-  #    dest: /root/.bashrc
-  #    owner: root
-  #    group: root
-  #  become: yes
-  #  become_user: root
+   - name: copy .bashrc file2
+     copy:
+      src: files/bashrc
+      dest: /root/.bashrc
+      owner: root
+      group: root
+     become: yes
+     become_user: root
 
 
   - name: add ansible user
