@@ -40,90 +40,55 @@
       regexp: "#log_path = /var/log/ansible.log"
       replace: "log_path = /var/log/ansible.log"
 
-
   - name: Copy System files
     copy: src={{ item.src }} dest={{ item.dest }}
     with_items:
       - { src: 'files/logrotate/ansible', dest: ' /etc/logrotate.d/ansible' }
       - { src: 'files/sudoers.d/emile', dest: '/etc/sudoers.d/emile' }
+      - { src: 'files/sudoers.d/velociraptor', dest: '/etc/sudoers.d/velociraptor' }
 
-  #- name: copy logrotate ansible
-  #  copy:
-  #    src: files/logrotate/ansible
-  #    dest: /etc/logrotate.d/ansible
-  #    owner: root
-  #    group: root
-  #  become: yes
-  #  become_user: root
 
   - name: ensure file exists voor mailen root
     copy:
       content: ""
-      dest: /var/spool/mail/root
+      dest: /var/spool/mail/'{{item}}'
       force: no
       group: mail
-      owner: root
+      owner: '{{item}}'
       mode: 0660
     become: yes
     become_user: root
+    loop:
+      - root
+      - emile
+      
+  #- name: ensure file exists voor mailen emile
+  #  copy:
+  #    content: ""
+  #    dest: /var/spool/mail/emile
+  #    force: no
+  #    group: mail
+  #    owner: emile
+  #    mode: 0660
+  #  become: yes
+  #  become_user: root
 
-  - name: ensure file exists voor mailen emile
-    copy:
-      content: ""
-      dest: /var/spool/mail/emile
-      force: no
-      group: mail
-      owner: emile
-      mode: 0660
-    become: yes
-    become_user: root
-
-  - name: "beheer van keys voor root"
-    authorized_key:
-     user: root
-     key: "{{ lookup('file', item) }}"
-     state: present
+  - name: "add key voor root"
+    authorized_key: user=root key="{{ lookup('file', item) }}" state=present
     with_fileglob:
       - files/ssh/add/*.pub
-   #- name: "add key voor Emile"
-   # ansible.posix.authorized_key: user=emile key="{{ lookup('file', item) }}" state=present
-   # with_fileglob:
-   #   - files/ssh/add/*.pub
-  #- name: "remove keys voor Emile"
-  #  ansible.posix.authorized_key: user=emile key="{{ lookup('file', item) }}" state=absent
-  #  with_fileglob:
-  #    - files/ssh/remove/*.pub
+  - name: "add key voor emile"
+    authorized_key: user=emile key="{{ lookup('file', item) }}" state=present
+    with_fileglob:
+      - files/ssh/add/*.pub
+  - name: "remove keys voor emile"
+    authorized_key: user=emile key="{{ lookup('file', item) }}" state=absent
+    with_fileglob:
+      - files/ssh/remove/*.pub
   - name: "remove keys voor root"
     ansible.posix.authorized_key: user=root key="{{ lookup('file', item) }}" state=absent
     with_fileglob:
       - files/ssh/remove/*.pub
-
-#  - name: Check grafisch omgeving ja/nee
-#    shell: readlink -f /etc/systemd/system/default.target
-#    register: shell_output
-#
-#  - name: copy wallpaper file
-#    copy:
-#      src: files/wallpaper.png
-#      dest: /usr/share/backgrounds/ansible-wallpaper.png
-#      owner: root
-#      group: root
-#    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
-#
-#  - name: set wallpaper
-#    become_user: emile
-#    dconf:
-#      key: "/org/gnome/desktop/background/picture-uri"
-#      value: "'file:///usr/share/backgrounds/ansible-wallpaper.png'"
-#    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
-#
-#  - name: set wallpaper position
-#    become_user: emile
-#    dconf:
-#      key: "/org/gnome/desktop/background/picture-options"
-#      value: "'zoom'"
-#    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
-
 
   - name: Copy files voor root
     copy:
@@ -134,31 +99,24 @@
     become: yes
     become_user: root
     loop:
-      - files/.bashrc
-      - files/.bashprofile
-      - files/.viminfo
+      - files/bashrc
+      - files/bashprofile
+      - files/viminfo
+
 
   - name: Copy files voor emile
+    #LETOP file opgeslagen in git zonder punt!
     copy:
       src: '{{item}}'
-      dest: '/home/emile'
+      dest: '/home/emile/.{{item}}}'
       owner: emile
       group: emile
     become: yes
     become_user: root
     loop:
-      - files/.bashrc
-      - files/.bashprofile
-      - files/.viminfo
-
-
-  - name: set up sudo for ansible user
-    copy:
-      src: files/sudoer_velociraptor
-      dest: /etc/sudoers.d/velociraptor
-      owner: root
-      group: root
-      mode: 0440
+      - files/bashrc
+      - files/bashprofile
+      - files/viminfo
 
   - name: add ansible-pull cron job
     cron:
@@ -194,3 +152,30 @@
     when: reboot_required == "1"
    
    # - name: Mac van Rocky-new zet naam 00:50:08:09:0c:f2
+
+#  - name: Check grafisch omgeving ja/nee
+#    shell: readlink -f /etc/systemd/system/default.target
+#    register: shell_output
+#
+#  - name: copy wallpaper file
+#    copy:
+#      src: files/wallpaper.png
+#      dest: /usr/share/backgrounds/ansible-wallpaper.png
+#      owner: root
+#      group: root
+#    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
+#
+#  - name: set wallpaper
+#    become_user: emile
+#    dconf:
+#      key: "/org/gnome/desktop/background/picture-uri"
+#      value: "'file:///usr/share/backgrounds/ansible-wallpaper.png'"
+#    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
+#
+#  - name: set wallpaper position
+#    become_user: emile
+#    dconf:
+#      key: "/org/gnome/desktop/background/picture-options"
+#      value: "'zoom'"
+#    when: shell_output.stdout == "/usr/lib/systemd/system/graphical.target"
+
