@@ -109,7 +109,7 @@
     become: yes
     become_user: root
     with_fileglob:
-      - files/home/*
+      - files/home/.*
 
   - name: Copy files voor emile
     copy:
@@ -120,7 +120,7 @@
     become: yes
     become_user: root
     with_fileglob:
-      - files/home/*
+      - files/home/.*
 
   - name: add ansible-pull cron job
     cron:
