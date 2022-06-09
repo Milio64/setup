@@ -61,6 +61,12 @@
         #https://www.cyberithub.com/how-to-install-mail-command-in-rhel-centos/  configuratie van mailx moet nog afgemaakt worden.
         #- tmux
 
+  - name: SSHD aanpassen
+    replace:
+      path: "/etc/ssh/sshd_config"
+      #after: "# if so defined, consider logrotate"
+      regexp: "PasswordAuthentication yes"
+      replace: "PasswordAuthentication no"
 
   - name: Ansible logging AAN
     replace:
@@ -69,6 +75,8 @@
       regexp: "#log_path = /var/log/ansible.log"
       replace: "log_path = /var/log/ansible.log"
     #nog iets verzinnen als regel niet bestaat in config file dan toevoegen
+      #[defaults]
+      #log_path = /var/log/ansible.log
 
   - name: Copy System files logrotage
     copy: src={{ item.src }} dest={{ item.dest }}
@@ -88,9 +96,6 @@
     loop:
       - root
       - emile
-
-
-
 
   ########### home directory's vullen
   - name: "install oh-my-bash1 voor root"
